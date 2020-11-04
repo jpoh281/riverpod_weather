@@ -5,13 +5,29 @@ import 'package:riverpod_weather/pages/setting_page.dart';
 import 'package:riverpod_weather/providers/city_provider.dart';
 import 'package:riverpod_weather/providers/providers.dart';
 import 'package:riverpod_weather/providers/settings_provider.dart';
+import '../providers/city_provider.dart';
+import '../providers/providers.dart';
 import '../providers/providers.dart';
 
-class HomePage extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final cwp = watch(currentWeatherProvider);
 
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+
+  @override
+  initState(){
+    Future.delayed(Duration(seconds: 0), (){
+      context.read(cityProvider).state = 'seoul';
+      context.read(currentWeatherProvider).fetchWeather();
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Weather"),
@@ -36,6 +52,7 @@ class HomePage extends ConsumerWidget {
               if (context
                   .read(cityProvider)
                   .state != null) {
+                final cwp = context.read(currentWeatherProvider);
                 await cwp.fetchWeather();
               }
             },
@@ -56,7 +73,10 @@ class HomePage extends ConsumerWidget {
               });
             }
           },
-          child: buildBody(watch(weatherStateProvider), watch(settingsProvider).state,context)),
+          child: Consumer(
+            builder: (context, watch, child){
+              return buildBody(watch(weatherStateProvider), watch(settingsProvider).state,context);
+            },))
     );
   }
 
