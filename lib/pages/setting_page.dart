@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/all.dart';
+import 'package:riverpod_weather/providers/settings_provider.dart';
 
-class SettingPage extends StatelessWidget {
+class SettingPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    final currentTempUnit = watch(settingsProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Settings")
@@ -13,9 +17,9 @@ class SettingPage extends StatelessWidget {
           title: Text('Temperature Unit'),
           subtitle: Text('Celcius or or Fahrenheit\nDefalut: Celcius'),
           trailing: Switch(
-            value: true,
+            value: currentTempUnit.state == TemperatureUnit.celsius,
             onChanged: (_){
-              return true;
+              currentTempUnit.state = currentTempUnit.state == TemperatureUnit.celsius ? TemperatureUnit.fahrenheit : TemperatureUnit.celsius;
             },
           ),
         ),

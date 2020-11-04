@@ -11,27 +11,30 @@ class Weather{
   Weather({this.weatherStateName, this.created, this.minTemp, this.maxTemp, this.theTemp, this.city, this.woeid, this.lastUpdated});
 
   factory Weather.fromJson(Map<String, dynamic> json) {
+    final consolidatedWeather = json['consolidated_weather'][0];
+
     return Weather(
-    weatherStateName : json['weather_state_name'],
-    created : json['created'],
-    minTemp : json['min_temp'] as double,
-    maxTemp : json['max_temp'] as double,
-    theTemp : json['the_temp'] as double,
-    city : json['city'],
-    woeid : json['woeid'] as int,
-    lastUpdated : DateTime.now());
+      weatherStateName: consolidatedWeather['weather_state_name'],
+      created: consolidatedWeather['created'],
+      minTemp: consolidatedWeather['min_temp'] as double,
+      maxTemp: consolidatedWeather['max_temp'] as double,
+      theTemp: consolidatedWeather['the_temp'] as double,
+      city: json['title'],
+      woeid: json['woeid'] as int,
+      lastUpdated: DateTime.now(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['weatherStateName'] = this.weatherStateName;
-    data['created'] = this.created;
-    data['minTemp'] = this.minTemp;
-    data['maxTemp'] = this.maxTemp;
-    data['theTemp'] = this.theTemp;
-    data['city'] = this.city;
-    data['woeid'] = this.woeid;
-    data['lastUpdated'] = this.lastUpdated;
-    return data;
+    return {
+      'weatherStateName': weatherStateName,
+      'created': created,
+      'minTemp': minTemp,
+      'maxTemp': maxTemp,
+      'theTemp': theTemp,
+      'city': city,
+      'woeid': woeid,
+      'lastUpdated': lastUpdated,
+    };
   }
 }

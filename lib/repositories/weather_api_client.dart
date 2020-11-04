@@ -31,7 +31,6 @@ class WeatherApiClient{
     final url = '$baseUrl/api/location/$locationId';
 
     final http.Response response = await httpClient.get(url);
-
     if(response.statusCode != 200){
       throw Exception(
         'Can not get weather of the city with locationId:$locationId'

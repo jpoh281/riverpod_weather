@@ -36,12 +36,18 @@ class CurrentWeather extends StateNotifier<WeatherState>{
   Future<void> fetchWeather() async{
     state = state.copyWith(loading: true, error: '');
     final String city = read(cityProvider).state;
-
     try{
       final Weather weather = await read(weatherRepositoryProvider).getWeather();
+      print("도시는 " + weather.city);
       state = state.copyWith(loading: false, weather: weather, error: '');
     }catch(e){
       state = state.copyWith(loading: false, error: 'Can not fetch the weather of $city');
     }
   }
 }
+
+final weatherStateProvider = Provider<WeatherState>((ref) {
+  print('>>> In weatherStateProvider');
+  final WeatherState weatherState = ref.watch(currentWeatherProvider.state);
+  return weatherState;
+});
